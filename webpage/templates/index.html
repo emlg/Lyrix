@@ -52,40 +52,36 @@
     </div>
 
     <div id="content">
-      First song : <input type="text" name="song_1"/>
-      First genre : <select id="genre_1">
-                      <option value="error">---</option>
-                      <option value="rock">Rock</option>
-                      <option value="classical">Classical</option>
-                      <option value="jazz">Jazz</option>
-                      <option value="electronic">Electronic</option>
-                    </select>
+      <form id="input">
+        Max number of words to change : <input type="text" id="nb" name="max_nb"/>
+        First genre : <select id="genre_1" name="src_genre">
+                        <option value="error">---</option>
+                        <option value="rock">Rock</option>
+                        <option value="pop">Pop</option>
+                        <option value="classical">Classical</option>
+                        <option value="jazz">Jazz</option>
+                        <option value="electronic">Electronic</option>
+                      </select> <br />
 
-      Second song : <input type="text" name="song_2"/>
-      Second genre : <select id="genre_2">
-                      <option value="error">---</option>
-                      <option value="rock">Rock</option>
-                      <option value="classical">Classical</option>
-                      <option value="jazz">Jazz</option>
-                      <option value="electronic">Electronic</option>
-                    </select>
+        Input lyrics : <input type="text" id="in_lyrics" name="l" style="width: 1000px; height : 20px"/> <br />
+        Second genre : <select id="genre_2" name="trg_genre">
+                        <option value="error">---</option>
+                        <option value="rock">Rock</option>
+                        <option value="pop">Pop</option>
+                        <option value="classical">Classical</option>
+                        <option value="jazz">Jazz</option>
+                        <option value="electronic">Electronic</option>
+                      </select>
 
-      <input type="button" value="Start !">
-
-      Test with Keras NN :
-      <form>
-        <input type="text" id="input" name="input_x" />
-        <input type="button" value="predict" onclick="queryNN()"/>
+        <input type="button" value="Start!" onclick="query()"/>
       </form>
+
 
     </div>
 
     <div id="result" >
       <p margin-top = "30px">
-        Your newly computed result is : <br />
-      </p>
-      <p id="prediction">
-
+        Your newly computed lyrics are displayed below. You can see the changed words in bold. <br />
       </p>
 
       <p id="new_lyrics">

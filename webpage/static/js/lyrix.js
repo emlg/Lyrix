@@ -1,8 +1,7 @@
-function queryNN(){
-  /*var input = document.getElementById("input").value;*/
-  /*console.log($('form').serialize());*/
+function query(){
+	/*console.log($('form').serialize());*/
 	$.ajax({
-		url: '/predict',
+		url: '/create',
     cache : false,
 		data: $('form').serialize(),
 		type: 'POST',
@@ -14,10 +13,18 @@ function queryNN(){
       console.log(error);
 		}
 	});
-
 }
 
-function update_data(pred){
-  /*console.log("Exited queryNN()");*/
-  document.getElementById("prediction").innerHTML = "We predicted the score : "+ pred;
+
+function update_data(swap){
+	swap = swap.replace(/'/g, '"')
+  console.log(swap);
+	swap = JSON.parse(swap)
+	lyrics = document.getElementById("in_lyrics").value.split(" ")
+	for(var i=0; i < lyrics.length; i++){
+		if (Object.keys(swap).includes(lyrics[i])){
+			lyrics[i] = '<b>' + swap[lyrics[i]] + '</b>';
+		}
+	}
+  document.getElementById("new_lyrics").innerHTML = lyrics.join(" ");
 }
