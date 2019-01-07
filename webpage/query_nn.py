@@ -13,26 +13,15 @@ def signUp():
     return render_template('index.html')
 score_ = 0
 
-# Load embeddings
-def load_embeddings(file_name):
-    with codecs.open(file_name, 'r', 'utf-8') as f_in:
-        lines = f_in.readlines()
-        lines = lines[1:]
-        vocabulary, wv = zip(*[line.strip().split(' ', 1) for line in lines])
-    wv = np.loadtxt(wv)
-    return wv, vocabulary
-
-def get_dict(embed, voc):
-    voc_embeds_dict = {}
-    embeds_voc_dict = {}
-    for v, emb in zip(voc, embed):
-        voc_embeds_dict[v] = tuple(emb)
-        embeds_voc_dict[tuple(emb)] = v
-    return voc_embeds_dict, embeds_voc_dict
-
+lyrics_base = ['where can we go what can we do\nwe re lost alone removed confused\nlet down and torn apart\nseek knowledge from the heart\nrework the illustrations we are a new creation\nsearching for the tower where the bells ring on the hour\nwhere the present and the future don t look sour\nwe re telling everyone we know so we can say that everybody knows\ncan t feed a hungry mouth when it s closed\nteach lies why try\ngive up give in\npretend turn heads\nkeep up sink in\nmisguided from the start\nseek wisdom from the heart\nyou can try your best to please us\nwe ll bite the hand that feeds us\njust when our time was running out and patience wearing thin\nwe start again where to begin\nthere s room for many more if you can fit into the mold\nbut don t come in go chase the wind',
+'sitin  by the tv sittin  drinkin  my wine\nmy friends all say that i m wasting time\ni m gonna wait right here just to get the right meat\ni been waiting for hours i can wait all week\ni m not talkin   bout love\nnot talkin   bout war\nget what i need from the girl next door\nbeen watchin  cartoons on the tv screen\nwhat i m looking for is long and lean\na ticket to ride i want my feet in the air\ni m gonna tell my baby that i just don t care\ni m not talkin   bout love\nnot talkin   bout war\nget what i need from the girl next door\nyeah get what i need oh yeah oh\nbeen runnin  down the scene with my gasoline\ni m feeling nasty and mighty mean\nsaid outta my way cause i m runnin  hot\ni got to show my baby just what i got\ni m not talkin   bout love\nnot talkin   bout war\ntake what i need from the girl next door\ni m not talkin   bout love\nnot talkin   bout war\ntake what i need from the girl next door\ni m not talkin   bout love\nnot talkin   bout war\nget what i need from the girl next door\nyeah i get what i need from that mojo yeah\noh',
+'born into this world the sum parts of a man\ncreated through experiments from scientific hands\nand though i live and breathe i cannot understand\nwith the mind of a child if this is what they planned\nlook upon me then hide away your face\ni am unlike you yet still i need a place\nwithin society where i can still be safe\nfrom all the ignorance of the human race\ni can try i still don t know why\nthey wanna lock me away\nfrom all i ve seen it makes no sense to me\nthey make a monster everyday\nthey make a monster everyday\nthey make a monster everyday\nthey make a monster everyday\nthey make a monster everyday',
+'face against the ground\ntorn but you can stand\nyour will is strong but you have now\ni know you can save us\nfaith is on your side\nfears you can t deny\nit s burned a hole right through your soul\nbut i know you can save us\nsave us now\ndon t say goodbye\ni know you can save us\ndon t wave goodbye\nbut nothing can break us\ndon t say goodbye\ni know you can save us\nyou can bring us back again\nborn to be as one\nturn to face the sun\nyour will is strong but you have now\ni know you can save us\nsave us now\ndon t say goodbye\ni know you can save us\ndon t wave goodbye\nbut nothing can break us\ndon t say goodbye\ni know you can save us\nyou can bring us back again\nyou can bring us back again\nface against the ground\ntorn but you can stand\nyour will is strong but you have now\ni know you can save us\ndon t say goodbye\ni know you can save us\ndon t wave goodbye\nbut nothing can break us\ndon t say goodbye\ni know you can save us\nyou can bring us back again\ndon t say goodbye\ni know you can save us\ndon t wave goodbye\nbut nothing can break us\ndon t say goodbye\ni know you can save us\nyou can bring us back again\nyou can bring us back again',
+'wait a minute my friend\ndon t pass me up for dead\nas babylon crumbles to sand\na sweet flower blossoms in my hand\nanother day is ending for you\nanother day\nwhile i m alive you see my rivers flowing\ndon t want to be like you\nthere are no wild beasts in here i know\nthere are no wild beasts in here we know\nand a voice of the people cries\nas it drones on in monotone\nhere is the news it s all so sad sad\nooh and those black and whites\nbut thy knew it\ntook a few and those panties in acquainted ways\ncome on\ncome on\ncome on away yeah\nwait a minute my friend\ndon t pass me up for dead\nas babylon crumbles to sand\na sweet flower blossoms in my hand\nanother day is ending for you\nanother day another day\ni m alive\nyou see my body burning\nburning up in here\nthere are no others in here i know\nthere are no others in here oh no\nburning up in here\nyou know you know\nstep a little closer\ni wonder if you can\nremember me in this way'
+]
 
 @app.route('/create', methods=['POST'])
-def query():
+def query_muse():
     def get_nearest_embed(emb, genre):
         if genre == 'pop':
             idx = neigh_pop.kneighbors([emb],return_distance=False)
@@ -54,7 +43,7 @@ def query():
     max_nb = int(request.form['max_nb'])
     src_genre = request.form['src_genre']
     trg_genre = request.form['trg_genre']
-    input_lyrics = request.form['l']
+    input_lyrics = lyrics_base[int(request.form['song'])]
     rock_specific = pickle.load(open("rock_specific.p", "rb"))
 
     words_spec_rock = []
@@ -72,37 +61,44 @@ def query():
             idx_of_tfidf.append(idx[0])
     ordered_terms = np.array(words_in_tfidf)[np.argsort(idx_of_tfidf)]
     SWAP_ROCK = list(set(words_spec_rock))
-    SWAP_TFIDF = []
-    i = 0
-    while len(SWAP_ROCK) + len(SWAP_TFIDF) < max_nb:
-        if ordered_terms[i] not in SWAP_ROCK and ordered_terms[i] not in SWAP_TFIDF:
-            SWAP_TFIDF.append(ordered_terms[i])
-        i += 1
-    src_file = "vectors-cbow_" + src_genre + ".txt"
-    trg_file = "vectors-cbow_" + trg_genre + ".txt"
-    muse_emb_rock, muse_voc_rock = load_embeddings(src_file)
-    muse_emb_pop, muse_voc_pop = load_embeddings(trg_file)
-    muse_voc2embed_rock, muse_embed2voc_rock = get_dict(muse_emb_rock, muse_voc_rock)
-    muse_voc2embed_pop, muse_embed2voc_pop = get_dict(muse_emb_pop, muse_voc_pop)
+    muse_voc2embed_rock= pickle.load(open("voc2embed_rock.p", "rb"))
+    muse_embed2voc_pop = pickle.load(open("embed2voc_pop.p", "rb"))
+    muse_emb_pop = pickle.load(open("muse_emb_pop.p", "rb"))
 
-    neigh_pop = NearestNeighbors(n_neighbors=3)
-    neigh_pop.fit(muse_emb_pop)
-    neigh_rock = NearestNeighbors(n_neighbors=3)
-    neigh_rock.fit(muse_emb_rock)
+    neigh_pop = pickle.load(open("neigh_pop.p", "rb"))
 
     swap = {}
     for w in SWAP_ROCK:
         new_word, neighbor_words = get_swap_word(w, 0, 'pop')
-        #print(w, '--> ', neighbor_words)
+        print(w, '--> ', neighbor_words)
         swap[w] = new_word
 
-    #print('-----')
-    for w in SWAP_TFIDF:
-        new_word, neighbor_words = get_swap_word(w, 1, 'pop')
-        #print(w, '--> ', neighbor_words)
-        swap[w] = new_word
+    print('-----')
+    i = 0
+    while len(swap.keys()) < 10 and i < len(ordered_terms):
+        w = ordered_terms[i]
+        if w not in swap.keys():
+            try:
+                new_word, neighbor_words = get_swap_word(w, 1, 'pop')
+                print(w, '--> ', neighbor_words)
+                swap[w] = new_word
+            except :
+                print("error for ", w)
+        i += 1
 
     return str(swap);
+
+
+@app.route('/predict', methods=['POST'])
+def query_nn():
+    #Retrieve the parameters
+    max_nb = int(request.form['max_nb'])
+    src_genre = request.form['src_genre']
+    trg_genre = request.form['trg_genre']
+    input_lyrics = lyrics_base[int(request.form['song'])]
+
+
+
 
 if __name__ == "__main__":
     app.run()

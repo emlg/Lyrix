@@ -30,9 +30,8 @@
     }
 
   </style>
-  <script src="/static/js/lyrix.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-
+  <script src="/static/js/lyrix.js"></script>
 
   <body>
     <div id="top">
@@ -63,7 +62,9 @@
                         <option value="electronic">Electronic</option>
                       </select> <br />
 
-        Input lyrics : <input type="text" id="in_lyrics" name="l" style="width: 1000px; height : 20px"/> <br />
+        Input lyrics : <select id="song" name="song">
+                        <option value="error">---</option>
+                      </select>
         Second genre : <select id="genre_2" name="trg_genre">
                         <option value="error">---</option>
                         <option value="rock">Rock</option>
@@ -72,10 +73,11 @@
                         <option value="jazz">Jazz</option>
                         <option value="electronic">Electronic</option>
                       </select>
-
-        <input type="button" value="Start!" onclick="query()"/>
+        <br />
+        <br />
+        <input type="button" value="Start MUSE!" onclick="query_muse()"/>
+        <input type="button" value="Start Neural Net!" onclick="query_nn()"/>
       </form>
-
 
     </div>
 
