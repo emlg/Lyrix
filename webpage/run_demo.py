@@ -32,54 +32,50 @@ lyrics_base = ['where can we go what can we do\nwe re lost alone removed confuse
 
 @app.route('/create', methods=['POST'])
 def query_muse():
-    def get_nearest_embed(emb, genre):
-        if genre == 'pop':
-            idx = neigh_pop.kneighbors([emb],return_distance=False)
-            return muse_emb_pop[idx][0]
-        elif genre == 'rock':
-            idx = neigh_rock.kneighbors([emb],return_distance=False)
-            return muse_emb_rock[idx][0]
+    def get_nearest_embed(emb):
+        idx = neigh_trg.kneighbors([emb],return_distance=False)
+        return muse_emb_trg[idx][0]
 
-    def get_swap_word(w, nb_neighbor, genre):
-        emb = muse_voc2embed_rock[w]
-        nearest_pop_emb = get_nearest_embed(emb, genre)
+    def get_swap_word(w, nb_neighbor):
+        emb = muse_voc2embed_src[w]
+        nearest_trg_emb = get_nearest_embed(emb)
         words = []
         for i in range(3):
-            words.append(muse_embed2voc_pop[tuple(list(nearest_pop_emb[i]))])
+            words.append(muse_embed2voc_trg[tuple(list(nearest_trg_emb[i]))])
         return words[nb_neighbor], words
 
 
     #print("arrived in python")
     max_nb = int(request.form['max_nb'])
-    src_genre = request.form['src_genre']
-    trg_genre = request.form['trg_genre']
+    src = request.form['src_genre']
+    trg = request.form['trg_genre']
     input_lyrics = lyrics_base[int(request.form['song'])]
-    rock_specific = pickle.load(open("rock_specific.p", "rb"))
+    src_specific = pickle.load(open(src+"/specific_from_"+trg+".py", "rb"))
 
-    words_spec_rock = []
+    words_spec_src = []
     for w in input_lyrics.split(' '):
-        if w in rock_specific:
-            words_spec_rock.append(w)
+        if w in src_specific:
+            words_spec_src.append(w)
 
-    tfidf_rock = pickle.load(open("tfidf_rock.p", "rb"))
+    tfidf_src = pickle.load(open(src+"/tfidf.py", "rb"))
     words_in_tfidf = []
     idx_of_tfidf = []
     for w in input_lyrics.split(' '):
-        idx = np.where(tfidf_rock==w)[0]
+        idx = np.where(tfidf_src==w)[0]
         if len(idx)!= 0:
             words_in_tfidf.append(w)
             idx_of_tfidf.append(idx[0])
     ordered_terms = np.array(words_in_tfidf)[np.argsort(idx_of_tfidf)]
-    SWAP_ROCK = list(set(words_spec_rock))
-    muse_voc2embed_rock= pickle.load(open("voc2embed_rock.p", "rb"))
-    muse_embed2voc_pop = pickle.load(open("embed2voc_pop.p", "rb"))
-    muse_emb_pop = pickle.load(open("muse_emb_pop.p", "rb"))
+    SWAP_SRC = list(set(words_spec_src))
+    muse_voc2embed_src= pickle.load(open(src+"/muse_voc2embed_with_"+trg+".py", "rb"))
+    muse_embed2voc_trg = pickle.load(open(trg+"/muse_embed2voc_with_"+src+".py", "rb"))
+    muse_emb_trg = pickle.load(open(trg+"/muse_emb_with_"+src+".py", "rb"))
 
-    neigh_pop = pickle.load(open("neigh_pop.p", "rb"))
+    neigh_trg = pickle.load(open(trg+"/neigh_with_"+src+".py", "rb"))
 
     swap = {}
-    for w in SWAP_ROCK:
-        new_word, neighbor_words = get_swap_word(w, 0, 'pop')
+    for w in SWAP_SRC:
+        new_word, neighbor_words = get_swap_word(w, 0)
         print(w, '--> ', neighbor_words)
         swap[w] = new_word
 
@@ -89,7 +85,7 @@ def query_muse():
         w = ordered_terms[i]
         if w not in swap.keys():
             try:
-                new_word, neighbor_words = get_swap_word(w, 1, 'pop')
+                new_word, neighbor_words = get_swap_word(w, 1)
                 print(w, '--> ', neighbor_words)
                 swap[w] = new_word
             except :
