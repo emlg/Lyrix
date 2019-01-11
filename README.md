@@ -3,10 +3,10 @@
 ### Olivier Couque and Emma Lejal Glaude
 
 In this repository you will find the following elements:
-- Lyrix_report.ipynb: This Jupyter Notebook will explain all the steps of our work on this project (from data collection to prediction). You will be able to follow the 2 different approaches that we implemented.
-- img folder: This folder contains several images used in the Lyrix_report notebook.
-- webpage folder: This folder contains all the files and explanations needed to run our demo of the project.
-- MUSE file creation.ipynb: This notebook will guide you through the creation of files necessary to transfer style with a new pair of genres.
+- <b>Lyrix_report.ipynb</b>: This Jupyter Notebook will explain all the steps of our work on this project (from data collection to prediction). You will be able to follow the 2 different approaches that we implemented.
+- <b>img</b> folder: This folder contains several images used in the Lyrix_report notebook.
+- <b>webpage</b> folder: This folder contains all the files and explanations needed to run our demo of the project.
+- <b>MUSE file creation.ipynb</b>: This notebook will guide you through the creation of files necessary to transfer style with a new pair of genres.
 
 If you would like to run the notebook, you can find the source files (initial file and incremental versions of it) in a zip named data, available here: [link].
 
