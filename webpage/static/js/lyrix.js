@@ -81,7 +81,7 @@ function update_data(swap){
 
 
 function query_nn(){
-  console.log("Managed to launch NN ! ");
+  /*console.log("Managed to launch NN ! ");*/
   $.ajax({
     /* URL with name of function*/
 		url: '/predict',
