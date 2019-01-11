@@ -8,7 +8,7 @@ In this repository you will find the following elements:
 - <b>webpage</b> folder: This folder contains all the files and explanations needed to run our demo of the project.
 - <b>MUSE file creation.ipynb</b>: This notebook will guide you through the creation of files necessary to transfer style with a new pair of genres.
 
-If you would like to run the notebook, you can find the source files (initial file and incremental versions of it) in a zip named data, available here: https://drive.google.com/file/d/1ZpbLf_7hdexyVbbuAQm78V45Fvz-HFl7/view?usp=sharing.
+If you would like to run the notebook, you can find the source files (initial file and incremental versions of it) in a zip named data, available here: https://tinyurl.com/lyrix-data-zip.
 
 We hope that you will enjoy our work,
 If you have any question, please contact us: olivier.couque@epfl.ch & emma.lejal-glaude@epfl.ch
