@@ -33,7 +33,7 @@ The notebook is composed of the following parts:
    6. Words Tokenization: This step turns our selected words into integers, with the help of the Keras library.
    7. Input of Neural Net: This is the creation of the N-Grams used as inputs of the Neural Network and making sure that we have the same number of N-Grams for each output (to avoid biases). We also apply the train-test-validation splitting.
    8. Model Creation: This step creates the Neural Network, according to our structure.
-  ![](img/NN.png)
+  ![](img/NN_empty.png)
    9. Predict words: After the training of the Neural Network, we analyse its results, its accuracy for the prediction (Categorical accuracy) as well as the part-of-speech accuracy and the syllable accuracy.
    10. Lyrics Generation: We make here an attempt to generate full lyrics with a 5-words seed. We can note that if the part of speech is satisfied, the meaning is poor and the repetitions high.
    11. Genre Fusion: In this part, we make the same type of predictions as for MUSE, we select the "most common" words, extract the 5-words seed leading to those words and use them as input to the neural network of the target genre: we therefore have the transfered word to replace in the song.
