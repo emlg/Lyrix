@@ -1,4 +1,4 @@
 fasttext_preprocessing/lyrics.txt
-
+data/*
 .ipynb_checkpoints
 .DS_Store
