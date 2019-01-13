@@ -70,7 +70,7 @@ def get_words_to_change(lyrics, tokenizer, genre_typical_words, genre_word_pos_d
     words_to_change_pos = []
     found_words = 0
     for w, _ in genre_typical_words:
-        if w in lyrics:
+        if w in lyrics and w in genre_word_pos_dict.keys():
             words_to_change.append(w)
             words_to_change_pos.append([(word, i) for i, word in enumerate(lyrics) if word == w])
             found_words += 1
@@ -149,8 +149,10 @@ def load_model(path, get_history):
     loaded_model_json = json_file.read()
     json_file.close()
     nn_model = model_from_json(loaded_model_json)
+    
     # load weigths in the model 
     nn_model.load_weights(path + '/weights.h5')
+    print("NO ERROR")
     history = {}
     if get_history:
         with open(path + '/trainHistoryDict', 'rb') as file:

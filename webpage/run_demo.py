@@ -7,6 +7,7 @@ import codecs
 import csv
 import pyphen
 from nn_helpers import *
+from keras import backend as K
 from keras.models import model_from_json
 from keras.utils import to_categorical
 from sklearn.neighbors import NearestNeighbors
@@ -131,6 +132,7 @@ def query_nn():
     trg_nn_model,trg_outnn_token_dict = load_all_data_for_genre(trg_genre, tokenizer)
     trg_preds_list = predict_new_words(trg_nn_model, src_nn_input, src_output, trg_outnn_token_dict, tokenizer)
     trg_src_lyrs = get_new_lyrics(input_lyrics, trg_preds_list)
+    K.clear_session()
     return trg_src_lyrs
 
 if __name__ == "__main__":
